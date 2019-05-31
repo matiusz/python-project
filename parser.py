@@ -1,5 +1,6 @@
 
-
+import random
+import math
 from openpyxl import *
 from deap import base
 from deap import creator
@@ -48,6 +49,9 @@ class Person:
     def __str__(self):
         return self.FirstName + " " + self.LastName
 
+def RandIntInRage():
+    return math.ceil(random.random()*10)
+
 def Main():
     peopleWorkbook = load_workbook(filename = 'people.xlsx')
     people = peopleWorkbook.active
@@ -65,9 +69,16 @@ def Main():
         persons.append(person)
     creator.create("FitnessMin", base.Fitness, weights=(1.0,))
     creator.create("Individual", list, fitness=creator.FitnessMin)
-
-
-
+    classTypes = []
+    for x in terms:
+        classTypes.append(x.ClassName)
+    classTypes=set(classTypes)
+    print(classTypes)
+    toolbox = base.Toolbox()
+    toolbox.register("attr_float", RandIntInRage)
+    toolbox.register("individual", tools.initRepeat, creator.Individual, toolbox.attr_float, n=len(classTypes))
+    ind1=toolbox.individual()
+    print(ind1)
 
 
 Main()
